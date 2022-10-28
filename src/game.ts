@@ -10,9 +10,14 @@ export async function playGame(userId: number) {
     let lives = 10;
 
     await gameLog("game-started", { randomNumber });
-
+    
     while (lives > 0) {
         const guess = await prompt(`Guess a number between 0 and ${maxNumber}`, 'number');
+        const hint = guess == randomNumber ?
+            'perfect' :
+            Number(guess) > randomNumber ? 'high' : 'low';
+        gameLog('guess', { guess, hint });
+
         if (Number(guess) === randomNumber) {
             console.log('You win!');
             gameLog('game-win');
@@ -26,12 +31,9 @@ export async function playGame(userId: number) {
                 break;
             }
 
-            const hint = Number(guess) > randomNumber ? 'high' : 'low';
             console.log(`You're guess was too ${bold(hint)}! You have ${lives} lives left`);
 
             console.log('\n');
-
-            gameLog('guess', { guess, hint });
         }
     }
 }
